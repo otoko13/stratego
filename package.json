@@ -8,7 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint": "yarn lint:eslint && yarn lint:prettier",
+    "lint": "pnpm run lint:eslint && pnpm run lint:prettier",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier . --check",
     "lintfix": "eslint . --fix && prettier --write --list-different ."

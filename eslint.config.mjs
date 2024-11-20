@@ -5,7 +5,14 @@ export default withNuxt({
   rules: {
     semi: "error",
     "prefer-const": "error",
-    "comma-dangle": "error",
+    "comma-dangle": ["error", "always-multiline"],
+    "vue/script-indent": [
+      "error",
+      2,
+      {
+        baseIndent: 1,
+      },
+    ],
+    "vue/multi-word-component-names": "off",
   },
 });
-// Your custom configs here
