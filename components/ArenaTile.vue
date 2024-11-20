@@ -3,11 +3,13 @@
     row: number;
     column: number;
     moveTarget?: boolean;
+    isLake?: boolean;
   }>();
 
   defineEmits(["move"]);
 
   const moveTargetClass = ref("move-target");
+  const lakeClass = ref("is-lake");
 
   /* Style related computations */
   const displayRow = computed(() => 10 - props.row + 1);
@@ -17,7 +19,10 @@
 
 <template>
   <div
-    :class="[{ [moveTargetClass]: props.moveTarget }, 'arena-tile']"
+    :class="[
+      { [moveTargetClass]: props.moveTarget, [lakeClass]: props.isLake },
+      'arena-tile',
+    ]"
     @click="$emit('move')"
   >
     {{ row }}-{{ column }}
@@ -34,7 +39,13 @@
     gap: 0;
 
     &.move-target {
+      cursor: pointer;
       background-color: fade(red, 20%);
+    }
+
+    &.is-lake {
+      cursor: default;
+      background-color: #9ec0ff;
     }
   }
 </style>

@@ -1,6 +1,22 @@
 <script setup lang="ts">
   import { onMounted } from "vue";
 
+  const tiles: Position[] = Array.from({ length: 100 }).map((_val, index) => ({
+    column: (index % 10) + 1,
+    row: Math.floor(index / 10) + 1,
+  }));
+
+  const lakeTiles: Position[] = [
+    { row: 5, column: 3 },
+    { row: 5, column: 4 },
+    { row: 5, column: 7 },
+    { row: 5, column: 8 },
+    { row: 6, column: 3 },
+    { row: 6, column: 4 },
+    { row: 6, column: 7 },
+    { row: 6, column: 8 },
+  ];
+
   const arenaComponentRef = ref();
   const componentHeight = ref();
   const painted = ref(false);
@@ -26,32 +42,44 @@
     }
 
     const possibleMoves: Position[] = [];
-    if (soldierPosition.value.row !== 1) {
-      possibleMoves.push({
-        row: soldierPosition.value.row - 1,
-        column: soldierPosition.value.column,
-      });
+
+    const moveDown = {
+      row: soldierPosition.value.row - 1,
+      column: soldierPosition.value.column,
+    };
+
+    const moveUp = {
+      row: soldierPosition.value.row + 1,
+      column: soldierPosition.value.column,
+    };
+
+    const moveLeft = {
+      row: soldierPosition.value.row,
+      column: soldierPosition.value.column - 1,
+    };
+
+    const moveRight = {
+      row: soldierPosition.value.row,
+      column: soldierPosition.value.column + 1,
+    };
+
+    if (soldierPosition.value.row !== 1 && !isInTiles(lakeTiles, moveDown)) {
+      possibleMoves.push(moveDown);
     }
 
-    if (soldierPosition.value.row !== 10) {
-      possibleMoves.push({
-        row: soldierPosition.value.row + 1,
-        column: soldierPosition.value.column,
-      });
+    if (soldierPosition.value.row !== 10 && !isInTiles(lakeTiles, moveUp)) {
+      possibleMoves.push(moveUp);
     }
 
-    if (soldierPosition.value.column !== 1) {
-      possibleMoves.push({
-        row: soldierPosition.value.row,
-        column: soldierPosition.value.column - 1,
-      });
+    if (soldierPosition.value.column !== 1 && !isInTiles(lakeTiles, moveLeft)) {
+      possibleMoves.push(moveLeft);
     }
 
-    if (soldierPosition.value.column !== 10) {
-      possibleMoves.push({
-        row: soldierPosition.value.row,
-        column: soldierPosition.value.column + 1,
-      });
+    if (
+      soldierPosition.value.column !== 10 &&
+      !isInTiles(lakeTiles, moveRight)
+    ) {
+      possibleMoves.push(moveRight);
     }
 
     return possibleMoves;
@@ -67,7 +95,7 @@
   };
 
   const moveSoldier = (row: number, column: number) => {
-    if (!isMoveTarget({ row, column })) {
+    if (!isInTiles(movableSpots.value, { row, column })) {
       return;
     }
     soldierPosition.value = {
@@ -76,16 +104,6 @@
     };
     soldierActivated.value = false;
   };
-
-  const isMoveTarget = (tile: Position) =>
-    movableSpots.value.some(
-      (spot: Position) => spot.column === tile.column && spot.row === tile.row
-    );
-
-  const tiles: Position[] = Array.from({ length: 100 }).map((_val, index) => ({
-    column: (index % 10) + 1,
-    row: Math.floor(index / 10) + 1,
-  }));
 
   const widthStyle = computed(() => `${componentHeight?.value ?? 0}px`);
 </script>
@@ -104,7 +122,8 @@
       :key="`[${tile.row},${tile.column}]`"
       :column="tile.column"
       :row="tile.row"
-      :moveTarget="isMoveTarget(tile)"
+      :moveTarget="isInTiles(movableSpots, tile)"
+      :isLake="isInTiles(lakeTiles, tile)"
       @move="() => moveSoldier(tile.row, tile.column)"
     />
     <Soldier
