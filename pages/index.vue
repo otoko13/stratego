@@ -1,7 +1,11 @@
 <template>
-  <div>
-    <Board />
-  </div>
+  <Board />
 </template>
 
-<script></script>
+<script setup lang="ts">
+definePageMeta({
+  layout: "default",
+});
+</script>
+
+<style lang="less" scoped></style>

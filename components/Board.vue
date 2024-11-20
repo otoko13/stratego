@@ -6,8 +6,9 @@
 
 <style lang="less" scoped>
 .board {
-  margin: 48px;
-  min-height: 800px;
-  min-width: 800px;
+  flex: 1 1 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 </style>
