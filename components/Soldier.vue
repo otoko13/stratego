@@ -37,5 +37,8 @@
     left: v-bind("positionLeft");
     top: v-bind("positionTop");
     border: 1px solid black;
+    transition:
+      top 250ms ease,
+      left 250ms ease;
   }
 </style>
